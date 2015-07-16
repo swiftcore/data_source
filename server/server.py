@@ -1,45 +1,76 @@
 # coding:utf-8
-# author: edvard
+__author__ = 'edvard'
 
 # 以Redis为后端的，twisted异步服务器
 
+import sys
+import os
+
+sys.path.append(os.path.join(os.getcwd(),'..'))
+
 from twisted.web import xmlrpc, server
+import logging
+from helper import arghelper
 
-class DB(object):
-	def __init__(self):
-		pass
-
-class TkServer(xmlrpc.XMLRPC):
+class FetchServer(xmlrpc.XMLRPC):
 	def __init__(self):
 		xmlrpc.XMLRPC.__init__(self,allowNone=True)
-		self.db = DB()
+		self.db = {}
 
-	def closeDB(self):
-		self.db.close()
+	def xmlrpc_add_bar(self,stk,row):
+		if not stk in self.db:
+			self.db[stk] = [tuple(row)]
+			return
 
-	def xmlrpc_add_bar(self,stk,bar):
-		pass
+		self.db[stk].append(tuple(row))
 
 	def xmlrpc_get_latest_bar(self,stk):
-		pass
+		if not stk in self.db:
+			return []
+
+		return self.db[stk][-1:]
 
 	def xmlrpc_get_n_bars(self,stk,n):
-		pass
+		if not stk in db:
+			return []
+
+		return self.db[stk][-n:] if n <= len(self.db[stk]) else self.db[stk]
 
 	def xmlrpc_get_till_bars(self,stk,tm_str):
-		pass
+		raise xmlrpc.Fault(120,'not implemented')
 
 	def xmlrpc_get_all_bars(self,stk):
-		pass
+		if not stk in self.db:
+			return []
 
-if __name__ == '__main__':
+		return self.db[stk]
+
+def main():
 	from twisted.internet import reactor
-	r = TkServer()
+	r = FetchServer()
 	reactor.listenTCP(10000,server.Site(r))
 	try:
 		reactor.run()
-	except Exception as e:
-		print e
-		r.closeDB()
+	except:
 		reactor.stop()
 
+def test():
+	print 'in test'
+
+if __name__ == '__main__':
+	arg_checker = arghelper.ArgChecker(os.path.join(os.getcwd(),'log'),sys.argv,'python server.py <log_file>')
+	if not arg_checker.check_arg_as_file():
+		# create dirs and files
+		if not os.path.exists('log'):
+			os.mkdir('log')
+		logging.basicConfig(filename=os.path.join(os.getcwd(),'log/log.txt'), 
+			level=logging.DEBUG,
+			filemode='a',
+			format='%(asttime)s - %(levelname)s:%(message)s')
+		print 'create the log/log.txt'
+	else:
+		logging.basicConfig(filename=os.path.join(os.getcwd(),'log/%s' % sys.argv[1]), 
+			level=logging.DEBUG,
+			filemode='a',
+			format='%(asttime)s - %(levelname)s:%(message)s')
+	main()
