@@ -32,7 +32,18 @@ python server.py
 cd client 
 python fetch.py 
 ``` 
+
 3. 停止服务器或客户端
 
-直接按Control+C终端程序执行
+> 直接按Control+C终端程序执行
 
+
+注意事项：
+----------------- 
+如果你没有Wind账号，请到如下地址下载软件并注册账号
+http://www.windin.com/windin2/Index.htm 
+
+同时，下载量化个人接口
+http://www.dajiangzhang.com/download
+
+启动量化个人接口后，选择小框中的记住用户名和密码，这样每次获取数据的时候就不会总问你密码了。
