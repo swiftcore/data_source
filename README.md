@@ -21,14 +21,14 @@ data_source工具使用说明
 
 1. 启动服务器
 
-```
+``` bash
 cd server
 python server.py 
 ``` 
 
 2. 启动客户端
 
-``` 
+``` bash 
 cd client 
 python fetch.py 
 ``` 
@@ -41,9 +41,11 @@ python fetch.py
 注意事项：
 ----------------- 
 如果你没有Wind账号，请到如下地址下载软件并注册账号
+
 http://www.windin.com/windin2/Index.htm 
 
 同时，下载量化个人接口
+
 http://www.dajiangzhang.com/download
 
 启动量化个人接口后，选择小框中的记住用户名和密码，这样每次获取数据的时候就不会总问你密码了。
