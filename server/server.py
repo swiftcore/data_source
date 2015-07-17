@@ -1,7 +1,7 @@
 # coding:utf-8
 __author__ = 'edvard'
 
-# 以Redis为后端的，twisted异步服务器
+# 以Redis为后端的(待加入)，twisted异步服务器
 
 import sys
 import os
@@ -31,7 +31,7 @@ class FetchServer(xmlrpc.XMLRPC):
 		return self.db[stk][-1:]
 
 	def xmlrpc_get_n_bars(self,stk,n):
-		if not stk in db:
+		if not stk in self.db:
 			return []
 
 		return self.db[stk][-n:] if n <= len(self.db[stk]) else self.db[stk]
@@ -49,6 +49,7 @@ def main():
 	from twisted.internet import reactor
 	r = FetchServer()
 	reactor.listenTCP(10000,server.Site(r))
+	print 'listen at port 10000'
 	try:
 		reactor.run()
 	except:
