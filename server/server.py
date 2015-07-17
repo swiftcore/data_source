@@ -23,6 +23,7 @@ class FetchServer(xmlrpc.XMLRPC):
 			return
 
 		self.db[stk].append(tuple(row))
+		logging.info('add %s' % row)
 
 	def xmlrpc_get_latest_bar(self,stk):
 		if not stk in self.db:
@@ -67,11 +68,11 @@ if __name__ == '__main__':
 		logging.basicConfig(filename=os.path.join(os.getcwd(),'log/log.txt'), 
 			level=logging.DEBUG,
 			filemode='a',
-			format='%(asttime)s - %(levelname)s:%(message)s')
+			format='%(asctime)s - %(levelname)s:%(message)s')
 		print 'create the log/log.txt'
 	else:
 		logging.basicConfig(filename=os.path.join(os.getcwd(),'log/%s' % sys.argv[1]), 
 			level=logging.DEBUG,
 			filemode='a',
-			format='%(asttime)s - %(levelname)s:%(message)s')
+			format='%(asctime)s - %(levelname)s:%(message)s')
 	main()
