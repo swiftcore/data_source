@@ -23,14 +23,14 @@ data_source工具使用说明
 
 ``` bash
 cd server
-python server.py 
+python server.py log.txt
 ``` 
 
 2. 启动客户端
 
 ``` bash 
 cd client 
-python fetch.py 
+python fetch.py connection.txt
 ``` 
 
 3. 停止服务器或客户端
