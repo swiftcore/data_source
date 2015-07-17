@@ -56,8 +56,8 @@ def get_fetch_config(conf_filename):
 	fields = fields_str.split(',')
 	return {'codes':codes, 'fields':fields}
 
-def fetch():
-	config = get_fetch_config()
+def fetch(conf_file):
+	config = get_fetch_config(conf_file)
 	# rt_time,rt_low,rt_last,rt_last,rt_last_vol,rt_upward_vol,rt_downward_vol
 	#data = w.wsq('000001.SZ','rt_last,rt_last_vol,rt_upward_vol,rt_downward_vol',func=democb)
 	data = w.wsq(config['codes'],config['fields'],func=democb)
