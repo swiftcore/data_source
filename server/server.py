@@ -11,40 +11,30 @@ sys.path.append(os.path.join(os.getcwd(),'..'))
 from twisted.web import xmlrpc, server
 import logging
 from helper import arghelper
+import dba 
 
 class FetchServer(xmlrpc.XMLRPC):
 	def __init__(self):
 		xmlrpc.XMLRPC.__init__(self,allowNone=True)
-		self.db = {}
+		self.db = dba.DB()
 
 	def xmlrpc_add_bar(self,stk,row):
-		if not stk in self.db:
-			self.db[stk] = [tuple(row)]
-			return
+		row_str = '%s,%.2f,%.2f,%s,%.2f' % tuple(row)
 
-		self.db[stk].append(tuple(row))
-		logging.info('add %s' % row)
+		self.db.add_record(stk,row_str)
+		logging.info('add %s' % row_str)
 
 	def xmlrpc_get_latest_bar(self,stk):
-		if not stk in self.db:
-			return []
-
-		return self.db[stk][-1:]
+		return self.db.get_latest_record(stk)
 
 	def xmlrpc_get_n_bars(self,stk,n):
-		if not stk in self.db:
-			return []
-
-		return self.db[stk][-n:] if n <= len(self.db[stk]) else self.db[stk]
+		return self.db.get_n_records(stk,n)
 
 	def xmlrpc_get_till_bars(self,stk,tm_str):
 		raise xmlrpc.Fault(120,'not implemented')
 
 	def xmlrpc_get_all_bars(self,stk):
-		if not stk in self.db:
-			return []
-
-		return self.db[stk]
+		return self.db.get_all_records(stk)
 
 def main():
 	from twisted.internet import reactor
