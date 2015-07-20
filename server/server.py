@@ -10,16 +10,28 @@ sys.path.append(os.path.join(os.getcwd(),'..'))
 
 from twisted.web import xmlrpc, server
 import logging
+import ConfigParser
 from helper import arghelper
 import dba 
 
 class FetchServer(xmlrpc.XMLRPC):
 	def __init__(self):
 		xmlrpc.XMLRPC.__init__(self,allowNone=True)
-		self.db = dba.DB()
+
+		conf = ConfigParser.ConfigParser()
+		conf.readfp(open('db_conf.cfg'))
+		section = 'connection'
+		db_host = conf.get(section,'host')
+		db_port = conf.getint(section,'port')
+		db_id = conf.getint(section,'db')
+		
+		self.db = dba.DB(host=db_host,port=db_port,db=db_id)
 
 	def xmlrpc_add_bar(self,stk,row):
-		row_str = '%s,%.2f,%.2f,%s,%.2f' % tuple(row)
+		if len(row) == 5:
+			row_str = '%s,%.2f,%.2f,%s,%.2f' % tuple(row)
+		else:
+			row_str = '%s,%.2f,%.2f,%s,%.2f,%s,%.2f' % tuple(row)
 
 		self.db.add_record(stk,row_str)
 		logging.info('add %s' % row_str)

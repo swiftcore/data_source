@@ -10,9 +10,8 @@ import sys
 # 如下地址不要改为localhost，否则会因为DNS解析导致RPC调用极其缓慢。
 
 def context(config,dataname):
-	section='server'
-	host = config.get(section,'host')
-	port = config.get(section,'port')
+	host = config.get('host','127.0.0.1')
+	port = config.get('port','10000')
 	proxy = xmlrpclib.ServerProxy('http://%s:%s' % (host,port))
 
 	def submit_record(stk,row):
@@ -53,7 +52,12 @@ def get_fetch_config(conf_filename):
 	fields_str = conf.get(section,'fields')
 	codes = codes_str.split(',')
 	fields = fields_str.split(',')
-	return {'codes':codes, 'fields':fields}
+
+	section = 'server'
+	host = conf.get(section,'host')
+	port = conf.get(section,'port')
+
+	return {'codes':codes, 'fields':fields, 'host':host, 'port':port}
 
 def fetch(conf_file):
 	config = get_fetch_config(conf_file)
