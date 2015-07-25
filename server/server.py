@@ -30,8 +30,13 @@ class FetchServer(xmlrpc.XMLRPC):
 	def xmlrpc_add_bar(self,stk,row):
 		if len(row) == 5:
 			row_str = '%s,%.2f,%.2f,%s,%.2f' % tuple(row)
-		else:
+		elif len(row) == 7:
 			row_str = '%s,%.2f,%.2f,%s,%.2f,%s,%.2f' % tuple(row)
+		elif len(row) == 2:
+			row_str = '%s,%.2f' % tuple(row)
+		else:
+			row_str = '%s' % row
+			logging.info('unknown format row:%s' % row)
 
 		self.db.add_record(stk,row_str)
 		logging.info('add %s' % row_str)
